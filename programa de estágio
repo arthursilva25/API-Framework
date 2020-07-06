@@ -1,0 +1,138 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Scanner;
+public class Programa {
+
+	public static void main(String[] args) 
+	{
+		
+		String url =new String();
+		Scanner teclado= new Scanner(System.in);
+		int escolha=1;
+		while(escolha!=0) 
+		{
+			escolha=Menu(escolha, teclado);
+			
+			switch(escolha) 
+			{
+				case 1:
+				url="posts";
+				try
+				{
+					MyGETRequest(url);
+				}
+				catch(IOException e) 
+				{
+					System.out.print(e);
+				}
+				break;
+				
+				case 2:
+				url="albums";
+				try
+				{
+					MyGETRequest(url);
+				}
+				catch(IOException e) 
+				{
+					System.out.print(e);
+				}
+				break;
+				
+				case 3:
+				url="todos";	
+				try
+				{
+					MyGETRequest(url);
+				}
+				catch(IOException e) 
+				{
+					System.out.print(e);
+				}
+				break;
+				
+			}
+		}
+	}
+	
+	public static int Menu(int escolha, Scanner teclado) 
+	{
+		System.out.print("*****Menu***** \n");
+		System.out.print("1- Postagens \n");
+		System.out.print("2- Albuns \n");
+		System.out.print("3- Todos \n");
+		System.out.print("0- Sair \n");
+		System.out.print("Escolha: ");
+		escolha=teclado.nextInt();
+		while(escolha<0||escolha>3) 
+		{
+			System.out.print("Valor inválido, digite novamente \n");
+			escolha=teclado.nextInt();
+		}
+		return escolha;
+	}
+	
+	public static void MyGETRequest(String url) throws IOException 
+	{
+		int escolha2;
+		
+		Scanner teclado2= new Scanner(System.in);
+		
+	    URL urlForGetRequest = new URL("https://jsonplaceholder.typicode.com/"+url);
+
+	    String readLine = null;
+
+	    HttpURLConnection conection = (HttpURLConnection) urlForGetRequest.openConnection();
+
+	    conection.setRequestMethod("GET");
+
+	    conection.setRequestProperty("userId", "a1bcdef"); // set userId its a sample here
+
+	    int responseCode = conection.getResponseCode();
+
+	    if (responseCode == HttpURLConnection.HTTP_OK) {
+
+	        BufferedReader in = new BufferedReader(
+
+	            new InputStreamReader(conection.getInputStream()));
+
+	        StringBuffer response = new StringBuffer();
+
+	        while ((readLine = in .readLine()) != null) {
+
+	            response.append(readLine);
+
+	        } in .close();
+
+	        // print result
+
+	        System.out.println("JSON String Result " + response.toString());
+	        
+	        System.out.print("Deseja sair do programa ou ir ao menu? \n");
+	        System.out.print("0-Sair \n");
+	        System.out.print("1-Menu \n");
+	        System.out.print("Escolha: ");
+	        escolha2=teclado2.nextInt();
+	        while(escolha2<0||escolha2>1) 
+	        {
+	        	System.out.print("Valor inválido, digite novamente \n");
+				escolha2=teclado2.nextInt();
+	        }
+	        if(escolha2==0) 
+	        {
+	        	System.exit(0);
+	        }
+
+	        //GetAndPost.POSTRequest(response.toString());
+
+	    } else 
+	    {
+
+	        System.out.println("GET NOT WORKED");
+
+	    }
+	}
+}
